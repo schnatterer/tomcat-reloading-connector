@@ -1,0 +1,11 @@
+# Ignore all
+*
+# Whitelist
+!reloading-connector
+reloading-connector/target
+!tomcat
+tomcat/target
+!.mvn
+!mvnw
+!pom.xml
+!entrypoint.sh

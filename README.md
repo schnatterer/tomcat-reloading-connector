@@ -3,18 +3,33 @@ tomcat-reloading-connector
 [![Build Status](https://travis-ci.org/schnatterer/tomcat-reloading-connector.svg?branch=master)](https://travis-ci.org/schnatterer/tomcat-reloading-connector)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent&metric=alert_status)](https://sonarcloud.io/dashboard?id=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent&metric=sqale_index)](https://sonarcloud.io/dashboard?id=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent)
-[![](https://img.shields.io/microbadger/layers/schnatterer/tomcat-reloading-connector)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector)
-[![](https://img.shields.io/docker/image-size/schnatterer/tomcat-reloading-connector)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector)
+[![](https://img.shields.io/microbadger/layers/schnatterer/tomcat-reloading-connector-example)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector-example)
+[![](https://img.shields.io/docker/image-size/schnatterer/tomcat-reloading-connector-example)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector-example)
 
 Tomcat connector that automatically reloads SSLConfig.
 
 # How to use?
 
-Right now, this only offers a specialized form of `org.apache.coyote.http11.Http11AprProtocol` that watches folder in 
-which the first configured certificate resides for changes and reloads SSLConfig on change.
+Right now, tomcat-reloading-connector offers a specialized `org.apache.coyote.http11.Http11AprProtocol` that watches
+the folder that contains the first configured certificate for changes and reloads SSLConfig on change.
  
-Http11AprProtocol means this only works with 
+`Http11AprProtocol` means this will only work with 
 [Apache Portable Runtime (APR) based Native library for Tomcat](https://tomcat.apache.org/tomcat-9.0-doc/apr.html).
+
+## Dependency
+
+```XML
+<dependency>
+  <groupId>info.schnatterer.tomcat-reloading-connector</groupId>
+  <artifactId>tomcat-reloading-connector</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+If you need the `jar` you could also download it manually, from here:
+
+`https://repo.maven.apache.org/maven2/info/schnatterer/tomcat-reloading-connector/tomcat-reloading-connector/${VERSION}/tomcat-reloading-connector-${VERSION}.jar`
+
 
 [![Maven Central](https://img.shields.io/maven-central/v/info.schnatterer.tomcat-reloading-connector/reloading-connector.svg)](https://search.maven.org/search?q=a:reloading-connector%20AND%20g:info.schnatterer.tomcat-reloading-connector)
 
@@ -31,11 +46,12 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
 </repository>
 ```
 
-## Tomcat
+## Use with Tomcat
 
 * Drop the reloading-connector.jar into your tomcat's library folder.
 * Configure the `ReloadingHttp11AprProtocol` in your `server.xml`.
 * Example: 
+
 ```xml
 <Connector port="8443" protocol= "info.schnatterer.tomcat.ReloadingHttp11AprProtocol" SSLEnabled="true" >
     <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
@@ -47,16 +63,16 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
     </SSLHostConfig>
 </Connector>
 ```
-## Embedded Tomcat
+## Usage with Embedded Tomcat
 
-* Add the `info.schnatterer.tomcat-reloading-connector:tomcat-reloading-connector:VERSION` dependency to your 
-  embedded tomcat project.
+* Add the dependency to your embedded tomcat project.
 * Create a `Connector` with the `ReloadingHttp11AprProtocol` and configure it.
 * See [example](tomcat). 
 
 # Try it
 
 ## Docker 
+
 ```bash
 CONTAINER=$(docker run --rm -p8443:8443 -d schnatterer/tomcat-reloading-connector-example)
 sleep 2
@@ -73,13 +89,10 @@ sleep 5
 echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity
 docker stop ${CONTAINER}
 ```
-
 ## Locally
 
 ```bash
 mvn package
-
-tomcat/createCerts.sh
 
 # Copy lib binaries from bitnami image
 # Or compile yourself
@@ -92,12 +105,16 @@ docker rm ${CONTAINER}
 mkdir tomcat/target/lib
 mv /tmp/lib/libapr* /tmp/lib/libtcnative* tomcat/target/lib
 
+tomcat/createCerts.sh
+
 # Start tomcat
-(cd tomcat && LD_LIBRARY_PATH="$(pwd)/target/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" target/bin/webapp)
+(cd tomcat && LD_LIBRARY_PATH="$(pwd)/target/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar target/tomcat-jar-with-dependencies.jar)
 ```
 
 ## Releasing
 
-`./mvnw release:prepare`
+```bash
+./mvnw release:prepare
+```
 
-Sets versions in pom.xml, commits, tags and pushes to SCM. Travis builds tag and pushes to Maven Central. 
+Sets versions in `ppm.xml`, commits, tags and pushes to SCM. Travis builds tag and pushes to Maven Central. 

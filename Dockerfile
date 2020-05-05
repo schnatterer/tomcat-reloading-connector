@@ -22,10 +22,7 @@ FROM jre as aggragtor
 COPY --from=tomcat /opt/bitnami/tomcat/lib/ /app/lib
 COPY entrypoint.sh /app/
 COPY --from=mavenbuild /app/tomcat/createCerts.sh /app/
-COPY --from=mavenbuild /app/tomcat/target/tomcat.jar /app/
-COPY --from=mavenbuild /app/tomcat/target/repo/ /app/repo
-COPY --from=mavenbuild /app/tomcat/target/bin/ /app/bin
-COPY --from=mavenbuild /app/tomcat/target/classes/ /app/
+COPY --from=mavenbuild /app/tomcat/target/tomcat-jar-with-dependencies.jar /app/
 
 FROM jre
 COPY --from=aggragtor --chown=1001:0 /app /app

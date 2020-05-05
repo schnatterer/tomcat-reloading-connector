@@ -4,7 +4,7 @@
 
     <artifactId>tomcat-reloading-connector-parent</artifactId>
     <groupId>info.schnatterer.tomcat-reloading-connector</groupId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>tomcat-reloading-connector-parent</name>

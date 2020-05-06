@@ -28,8 +28,7 @@ the folder that contains the first configured certificate for changes and reload
 
 If you need the `jar` you could also download it manually, from here:
 
-`https://repo.maven.apache.org/maven2/info/schnatterer/tomcat-reloading-connector/tomcat-reloading-connector/${VERSION}/tomcat-reloading-connector-${VERSION}.jar`
-
+`https://repo1.maven.org/maven2/info/schnatterer/tomcat-reloading-connector/reloading-connector/0.1.0/reloading-connector-0.1.0.jar`
 
 [![Maven Central](https://img.shields.io/maven-central/v/info.schnatterer.tomcat-reloading-connector/reloading-connector.svg)](https://search.maven.org/search?q=a:reloading-connector%20AND%20g:info.schnatterer.tomcat-reloading-connector)
 
@@ -63,6 +62,12 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
     </SSLHostConfig>
 </Connector>
 ```
+## Usage with Spring Boot
+
+* Add the dependency to your embedded tomcat project.
+* Create a `Connector` with the `ReloadingHttp11AprProtocol` and configure it.
+* See [example](spring-boot).
+ 
 ## Usage with Embedded Tomcat
 
 * Add the dependency to your embedded tomcat project.
@@ -83,12 +88,18 @@ curl -k https://localhost:8443
 echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity
 
 # Reload certs
-docker exec ${CONTAINER} /app/createCerts.sh
+docker exec -w /app ${CONTAINER} ./createCerts.sh
 # View new cert
 sleep 5
 echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity
 docker stop ${CONTAINER}
 ```
+
+If you want to build the image yourself
+
+* `docker build .` builds the spring-boot image
+* `docker build --build-arg=FLAVOR=embedded-tomcat .` builds the embedded tomcat image
+
 ## Locally
 
 ```bash
@@ -102,13 +113,15 @@ mvn package
 CONTAINER=$(docker create bitnami/tomcat:9.0.31-debian-10-r25 )
 docker cp ${CONTAINER}:/opt/bitnami/tomcat/lib /tmp
 docker rm ${CONTAINER}
-mkdir tomcat/target/lib
-mv /tmp/lib/libapr* /tmp/lib/libtcnative* tomcat/target/lib
+mkdir lib
+mv /tmp/lib/libapr* /tmp/lib/libtcnative* lib
 
-tomcat/createCerts.sh
+./createCerts.sh
 
-# Start tomcat
-(cd tomcat && LD_LIBRARY_PATH="$(pwd)/target/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar target/tomcat-jar-with-dependencies.jar)
+# Start embedded tomcat
+LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar tomcat/target/tomcat-jar-with-dependencies.jar
+# or spring boot
+LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar spring-boot/target/spring-boot-*.jar
 ```
 
 ## Releasing

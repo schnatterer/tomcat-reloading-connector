@@ -2,14 +2,11 @@
 
 CERT_VALIDITY_DAYS=${CERT_VALIDITY_DAYS:-30}
 
-BASEDIR=$(dirname $0)
-ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
-
 set -o errexit -o nounset -o pipefail
 
 createSelfSignedCert() {
     
-    certDir=${BASEDIR}/target/certs
+    certDir=certs
     cert=crt.pem
     pk=pk.pem
     ca=ca.crt.pem

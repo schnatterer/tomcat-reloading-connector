@@ -1,3 +1,5 @@
+ARG FLAVOR=spring-boot
+
 ARG JAVA_VERSION=8u252-b09-debian
 FROM adoptopenjdk/openjdk8:jdk${JAVA_VERSION}-slim as jdk
 FROM adoptopenjdk/openjdk8:jre${JAVA_VERSION} as jre
@@ -10,21 +12,29 @@ COPY .mvn/ /app/.mvn/
 COPY mvnw /app/ 
 COPY pom.xml /app
 COPY reloading-connector/pom.xml  /app/reloading-connector/ 
+COPY spring-boot/pom.xml  /app/spring-boot/ 
 COPY tomcat/pom.xml /app/tomcat/
 RUN ./mvnw dependency:go-offline
 
 FROM mavencache as mavenbuild
 COPY reloading-connector /app/reloading-connector
 COPY tomcat /app/tomcat
+COPY spring-boot /app/spring-boot
 RUN ./mvnw package
 
-FROM jre as aggragtor
+FROM jre as spring-boot
+COPY --from=mavenbuild /app/spring-boot/target/spring-boot-*.jar /app/app.jar
+
+FROM jre as embedded-tomcat
+COPY --from=mavenbuild /app/tomcat/target/tomcat-jar-with-dependencies.jar /app/app.jar
+
+FROM ${FLAVOR} as aggregator
 COPY --from=tomcat /opt/bitnami/tomcat/lib/ /app/lib
 COPY entrypoint.sh /app/
-COPY --from=mavenbuild /app/tomcat/createCerts.sh /app/
-COPY --from=mavenbuild /app/tomcat/target/tomcat-jar-with-dependencies.jar /app/
+COPY createCerts.sh /app/
 
 FROM jre
-COPY --from=aggragtor --chown=1001:0 /app /app
+COPY --from=aggregator --chown=1001:0 /app /app
 USER 1001:0
 ENTRYPOINT [ "/app/entrypoint.sh" ]
+

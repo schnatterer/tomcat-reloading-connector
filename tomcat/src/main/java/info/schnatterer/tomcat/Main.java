@@ -49,9 +49,9 @@ public class Main {
         SSLHostConfig sslHostConfig = new SSLHostConfig();
         SSLHostConfigCertificate cert =
                 new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.RSA);
-        cert.setCertificateKeyFile(new File("target/certs/pk.pem").getAbsolutePath());
-        cert.setCertificateFile(new File("target/certs/crt.pem").getAbsolutePath());
-        cert.setCertificateChainFile(new File("target/certs/ca.crt.pem").getAbsolutePath());
+        cert.setCertificateKeyFile(new File("certs/pk.pem").getAbsolutePath());
+        cert.setCertificateFile(new File("certs/crt.pem").getAbsolutePath());
+        cert.setCertificateChainFile(new File("certs/ca.crt.pem").getAbsolutePath());
         sslHostConfig.addCertificate(cert);
         connector.addSslHostConfig(sslHostConfig);
 

@@ -5,7 +5,10 @@
 reloading-connector/target
 !tomcat
 tomcat/target
+!spring-boot
+spring-boot/target
 !.mvn
 !mvnw
 !pom.xml
 !entrypoint.sh
+!createCerts.sh

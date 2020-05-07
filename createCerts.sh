@@ -11,7 +11,7 @@ createSelfSignedCert() {
     pk=pk.pem
     ca=ca.crt.pem
     host=localhost
-    ipAddress='127.0.0.1'
+    ipAddress=$(hostname -I | awk '{print $1}')
 
     mkdir -p ${certDir}
 
@@ -25,7 +25,7 @@ createSelfSignedCert() {
         openssl req -newkey rsa:4096 -keyout ca.pk.pem -x509 -new -nodes -out ${ca} \
           -subj "/OU=Unknown/O=Unknown/L=Unknown/ST=unknown/C=DE"  -days "${CERT_VALIDITY_DAYS}"
 
-        subjectAltName="$(printf "subjectAltName=IP:%s,DNS:%s" "${ipAddress}" "${host}")"
+        subjectAltName="$(printf "subjectAltName=IP:127.0.0.1,IP:%s,DNS:%s" "${ipAddress}" "${host}")"
         openssl req -new -newkey rsa:4096 -nodes -keyout ${pk} -out csr.pem \
                -subj "/CN=${host}/OU=Unknown/O=Unknown/L=Unknown/ST=unknown/C=DE" \
                -config <(cat /etc/ssl/openssl.cnf <(printf "\n[SAN]\n%s" "${subjectAltName}"))

@@ -7,27 +7,8 @@ addons:
     organization: "schnatterer-github"
     
 script:
-  # Simple smoke test
-  - docker build -t tomcat-reloading-connector-spring .
-  - CONTAINER=$(docker run --rm -p8443:8443 -d tomcat-reloading-connector-spring)
-  # Wait for container to be ready
-  - wget -O- --retry-connrefused --tries=30 -q --wait=1 --no-check-certificate https://localhost:8443 &> /dev/null
-  - BEFORE=$(echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity)
-  - docker exec -w /app ${CONTAINER} ./createCerts.sh
-  - sleep 5
-  - AFTER=$(echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity)
-  - '[[ "${BEFORE}" != "${AFTER}" ]]'
-  # Print logs for debugging
-  - docker logs ${CONTAINER}
-  - docker stop ${CONTAINER}
-  - docker build -t tomcat-reloading-connector --build-arg=FLAVOR=embedded-tomcat .
-  - CONTAINER=$(docker run --rm -p8443:8443 -d tomcat-reloading-connector)
-  - wget -O- --retry-connrefused --tries=30 -q --wait=1 --no-check-certificate https://localhost:8443 &> /dev/null
-  # Fail for non positive return code
-  - curl -k --fail https://localhost:8443
-  - docker logs ${CONTAINER}
-  - docker stop ${CONTAINER}
-
+  - export DEBUG=1
+  - ./test-images.sh
   # Maven deploy
   - |
     cat << EOF > settings.xml

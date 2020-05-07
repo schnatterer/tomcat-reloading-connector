@@ -72,7 +72,7 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
 
 * Add the dependency to your embedded tomcat project.
 * Create a `Connector` with the `ReloadingHttp11AprProtocol` and configure it.
-* See [example](tomcat). 
+* See [example](embedded-tomcat). 
 
 # Try it
 
@@ -119,7 +119,7 @@ mv /tmp/lib/libapr* /tmp/lib/libtcnative* lib
 ./createCerts.sh
 
 # Start embedded tomcat
-LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar tomcat/target/tomcat-jar-with-dependencies.jar
+LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar embedded-tomcat/target/tomcat-jar-with-dependencies.jar
 # or spring boot
 LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar spring-boot/target/spring-boot-*.jar
 ```

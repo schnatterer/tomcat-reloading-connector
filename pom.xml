@@ -21,7 +21,7 @@
 
     <modules>
         <module>reloading-connector</module>
-        <module>tomcat</module>
+        <module>embedded-tomcat</module>
         <module>spring-boot</module>
     </modules>
 

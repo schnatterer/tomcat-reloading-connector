@@ -3,8 +3,8 @@
 # Whitelist
 !reloading-connector
 reloading-connector/target
-!tomcat
-tomcat/target
+!embedded-tomcat
+embedded-tomcat/target
 !spring-boot
 spring-boot/target
 !.mvn

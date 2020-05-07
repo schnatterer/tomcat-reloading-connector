@@ -13,12 +13,12 @@ COPY mvnw /app/
 COPY pom.xml /app
 COPY reloading-connector/pom.xml  /app/reloading-connector/ 
 COPY spring-boot/pom.xml  /app/spring-boot/ 
-COPY tomcat/pom.xml /app/tomcat/
+COPY embedded-tomcat/pom.xml /app/embedded-tomcat/
 RUN ./mvnw dependency:go-offline
 
 FROM mavencache as mavenbuild
 COPY reloading-connector /app/reloading-connector
-COPY tomcat /app/tomcat
+COPY embedded-tomcat /app/embedded-tomcat
 COPY spring-boot /app/spring-boot
 RUN ./mvnw package
 
@@ -26,7 +26,7 @@ FROM jre as spring-boot
 COPY --from=mavenbuild /app/spring-boot/target/spring-boot-*.jar /app/app.jar
 
 FROM jre as embedded-tomcat
-COPY --from=mavenbuild /app/tomcat/target/tomcat-jar-with-dependencies.jar /app/app.jar
+COPY --from=mavenbuild /app/embedded-tomcat/target/tomcat-jar-with-dependencies.jar /app/app.jar
 
 FROM ${FLAVOR} as aggregator
 COPY --from=tomcat /opt/bitnami/tomcat/lib/ /app/lib

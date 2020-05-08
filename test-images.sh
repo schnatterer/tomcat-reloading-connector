@@ -6,12 +6,13 @@ DEBUG=${DEBUG:-''}
 [[ ! -z "${DEBUG}" ]] && set -x
 
 function main () {
-    docker build -t tomcat-reloading-connector --build-arg=FLAVOR=embedded-tomcat .
-
-    testImage 'tomcat-reloading-connector'
+    #docker build -t 'tomcat-reloading-connector-standalone' standalone-tomcat
+    #testImage 'tomcat-reloading-connector-standalone'
+    
+    docker build -t tomcat-reloading-connector-embedded --build-arg=FLAVOR=embedded-tomcat .
+    testImage 'tomcat-reloading-connector-embedded'
     
     docker build -t tomcat-reloading-connector-spring .
-    
     testImage 'tomcat-reloading-connector-spring'
 }
 
@@ -27,7 +28,7 @@ function testImage() {
     
     BEFORE=$(queryCertValidity "${CONTAINER_IP}")
     
-    docker exec -w /app ${CONTAINER} ./createCerts.sh
+    docker exec ${CONTAINER} /createCerts.sh
     sleep 5
     
     AFTER=$(queryCertValidity "${CONTAINER_IP}")

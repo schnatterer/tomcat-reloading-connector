@@ -88,7 +88,7 @@ curl -k https://localhost:8443
 echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity
 
 # Reload certs
-docker exec -w /app ${CONTAINER} ./createCerts.sh
+docker exec ${CONTAINER} /createCerts.sh
 # View new cert
 sleep 5
 echo | openssl s_client -showcerts -servername localhost -connect localhost:8443 2>/dev/null | openssl x509 -inform pem -noout -text | grep -A2 Validity

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 CERT_VALIDITY_DAYS=${CERT_VALIDITY_DAYS:-30}
+CERT_DIR=${CERT_DIR:-certs}
 
 set -o errexit -o nounset -o pipefail
 
 createSelfSignedCert() {
     
-    certDir=certs
+    certDir=${CERT_DIR}
     cert=crt.pem
     pk=pk.pem
     ca=ca.crt.pem

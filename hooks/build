@@ -1,0 +1,59 @@
+#!/bin/bash
+# -o nounset because some values are magically set by docker cloud build
+set -o errexit -o pipefail
+
+POTENTIAL_TAG=$(git name-rev --name-only --tags HEAD)
+if [[ "${POTENTIAL_TAG}" != "undefined" ]]; then
+    TAG="${POTENTIAL_TAG}"
+fi
+
+# Don't use docker cloud build's IMAGE_NAME, because it already contains the tag latest.
+IMAGE_NAME=schnatterer/tomcat-reloading-connector-example
+
+function main() {
+    build 'spring-boot'
+    tag 'spring-boot' 'latest'
+
+    build 'embedded-tomcat'
+    
+    build 'standalone-tomcat'
+    
+    if [[ ! -z "${TAG}" ]]; then
+        tag 'spring-boot' "${TAG}"
+        tag 'spring-boot' "spring-boot-${TAG}"
+        
+        tag 'embedded-tomcat' "embedded-tomcat-${TAG}"
+        
+        tag 'standalone-tomcat' "standalone-tomcat-${TAG}"
+    fi
+}
+
+function build() {
+    local FLAVOR="$1"
+    IMAGE="${IMAGE_NAME}:${FLAVOR}"
+
+    docker image build \
+        --build-arg FLAVOR="${FLAVOR}" \
+        --tag ${IMAGE} \
+        .
+
+    push "${IMAGE}"
+}
+
+function tag() {
+   local SRC="$1"
+   local TARGET="$2"
+   docker tag ${IMAGE_NAME}:${SRC} ${IMAGE_NAME}:${TARGET}
+   echo "tagged '${IMAGE_NAME}:${SRC}' as '${IMAGE_NAME}:${TARGET}'"
+   push "${IMAGE_NAME}:${TARGET}"
+}
+
+function push() {
+    if [ "${SKIP_PUSH}" = true ] ; then
+        echo "Skipping push, because SKIP_PUSH set to true"
+    else
+        docker push "$1"
+    fi
+}
+
+main "$@"

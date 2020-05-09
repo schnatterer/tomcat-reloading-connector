@@ -62,6 +62,9 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
     </SSLHostConfig>
 </Connector>
 ```
+
+* See also [example](standalone-tomcat). 
+
 ## Usage with Spring Boot
 
 * Add the dependency to your embedded tomcat project.
@@ -95,10 +98,12 @@ echo | openssl s_client -showcerts -servername localhost -connect localhost:8443
 docker stop ${CONTAINER}
 ```
 
-If you want to build the image yourself
+If you want to build the image yourself:  
+(note that they are included into one `Dockerfile` to keep them DRY)
 
 * `docker build .` builds the spring-boot image
 * `docker build --build-arg=FLAVOR=embedded-tomcat .` builds the embedded tomcat image
+* `docker build --build-arg=FLAVOR=standalone-tomcat .` builds the standalone tomcat image
 
 ## Locally
 
@@ -122,6 +127,7 @@ mv /tmp/lib/libapr* /tmp/lib/libtcnative* lib
 LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar embedded-tomcat/target/tomcat-jar-with-dependencies.jar
 # or spring boot
 LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar spring-boot/target/spring-boot-*.jar
+# Standalone example is docker only
 ```
 
 ## Releasing
@@ -130,4 +136,4 @@ LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar spr
 ./mvnw release:prepare
 ```
 
-Sets versions in `ppm.xml`, commits, tags and pushes to SCM. Travis builds tag and pushes to Maven Central. 
+Sets versions in `pom.xml`, commits, tags and pushes to SCM. Travis builds tag and pushes to Maven Central. 

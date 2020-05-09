@@ -6,14 +6,15 @@ DEBUG=${DEBUG:-''}
 [[ ! -z "${DEBUG}" ]] && set -x
 
 function main () {
-    #docker build -t 'tomcat-reloading-connector-standalone' standalone-tomcat
-    #testImage 'tomcat-reloading-connector-standalone'
+    
+    docker build -t tomcat-reloading-connector-spring .
+    testImage 'tomcat-reloading-connector-spring'
     
     docker build -t tomcat-reloading-connector-embedded --build-arg=FLAVOR=embedded-tomcat .
     testImage 'tomcat-reloading-connector-embedded'
     
-    docker build -t tomcat-reloading-connector-spring .
-    testImage 'tomcat-reloading-connector-spring'
+    docker build -t 'tomcat-reloading-connector-standalone' --build-arg=FLAVOR=standalone-tomcat .
+    testImage 'tomcat-reloading-connector-standalone'
 }
 
 function testImage() {

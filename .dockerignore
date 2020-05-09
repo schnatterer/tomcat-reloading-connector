@@ -7,6 +7,7 @@ reloading-connector/target
 embedded-tomcat/target
 !spring-boot
 spring-boot/target
+!standalone-tomcat
 !.mvn
 !mvnw
 !pom.xml

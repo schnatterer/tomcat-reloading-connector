@@ -13,7 +13,7 @@ import java.util.Set;
 public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
 
     private final Object lock = new Object();
-    private boolean configChanged = false;
+    private volatile boolean configChanged = false;
 
     @Override
     public void init() throws Exception {
@@ -49,11 +49,12 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
                 return;
             }
 
-            Path path = Paths.get(certificateFile).getParent();
-            log.info("Watching certificate folder for change: " + path);
 
             WatchService watchService;
             try {
+                // Use the same logic for resolving the path as OpenSSLContext.addCertificate -> adjustRelativePath()
+                Path path = Paths.get(SSLHostConfig.adjustRelativePath(certificateFile)).getParent();
+                log.info("Watching certificate folder for change: " + path);
                 watchService = FileSystems.getDefault().newWatchService();
 
                 path.register(
@@ -64,7 +65,7 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
 
                 watchAndReload(watchService);
             } catch (IOException e) {
-                log.error("Error while setting up watch for certificate folder: " + path.toAbsolutePath().toString(), e);
+                log.error("Error while setting up watch for folder of certificate file: " + certificateFile, e);
                 throw new WatchSslConfigException(e);
             }
         }
@@ -122,7 +123,7 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
             }
         }
     }
-    
+
     static class WatchSslConfigException extends RuntimeException {
         WatchSslConfigException(Exception e) {
             super(e);

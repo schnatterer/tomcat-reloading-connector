@@ -35,6 +35,8 @@ function testImage() {
     AFTER=$(queryCertValidity "${CONTAINER_IP}")
     [[ "${BEFORE}" != "${AFTER}" ]]
     
+    curl -k --silent --fail "https://${CONTAINER_IP}:8443" > /dev/null
+    
     # Print logs for debugging
     [[ ! -z "${DEBUG}" ]] && docker logs ${CONTAINER}
     docker stop ${CONTAINER}
@@ -46,4 +48,4 @@ function queryCertValidity() {
      openssl x509 -inform pem -noout -text | grep -A2 Validity
 }
 
-main "$*"
+main "$@"

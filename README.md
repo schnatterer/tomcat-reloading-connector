@@ -1,7 +1,6 @@
 tomcat-reloading-connector
 ======
 [![Build Status](https://travis-ci.org/schnatterer/tomcat-reloading-connector.svg?branch=master)](https://travis-ci.org/schnatterer/tomcat-reloading-connector)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent&metric=alert_status)](https://sonarcloud.io/dashboard?id=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent&metric=sqale_index)](https://sonarcloud.io/dashboard?id=info.schnatterer.tomcat-reloading-connector%3Atomcat-reloading-connector-parent)
 [![](https://img.shields.io/microbadger/layers/schnatterer/tomcat-reloading-connector-example)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector-example)
 [![](https://img.shields.io/docker/image-size/schnatterer/tomcat-reloading-connector-example)](https://hub.docker.com/r/schnatterer/tomcat-reloading-connector-example)

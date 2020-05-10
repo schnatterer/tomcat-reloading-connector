@@ -2,8 +2,9 @@
 # -o nounset because some values are magically set by docker cloud build
 set -o errexit -o pipefail
 
-POTENTIAL_TAG=$(git name-rev --name-only --tags HEAD)
-if [[ "${POTENTIAL_TAG}" != "undefined" ]]; then
+# Note that "git name-rev --name-only --tags HEAD" always seems to append a caret (e.g. "1.0.0^")
+POTENTIAL_TAG=$(git tag --points-at HEAD)
+if [[ ! -z "${POTENTIAL_TAG}" ]]; then
     TAG="${POTENTIAL_TAG}"
 fi
 

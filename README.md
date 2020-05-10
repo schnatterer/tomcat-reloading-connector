@@ -63,19 +63,19 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
 </Connector>
 ```
 
-* See also [example](standalone-tomcat). 
+* See also [example](examples/standalone-tomcat). 
 
 ## Usage with Spring Boot
 
 * Add the dependency to your embedded tomcat project.
 * Create a `Connector` with the `ReloadingHttp11AprProtocol` and configure it.
-* See [example](spring-boot).
+* See [example](examples/spring-boot).
  
 ## Usage with Embedded Tomcat
 
 * Add the dependency to your embedded tomcat project.
 * Create a `Connector` with the `ReloadingHttp11AprProtocol` and configure it.
-* See [example](embedded-tomcat). 
+* See [example](examples/embedded-tomcat). 
 
 # Try it
 

@@ -25,7 +25,7 @@ function testImage() {
     # Check Container running
     docker container inspect ${CONTAINER} > /dev/null
      # Wait for container to be ready
-    sleep 5
+    sleep 7
     
     BEFORE=$(queryCertValidity "${CONTAINER_IP}")
     

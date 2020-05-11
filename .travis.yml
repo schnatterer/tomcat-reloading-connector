@@ -32,15 +32,18 @@ script:
   - echo "${PK_BASE64}" | base64 -d > "${TMP_KEY}"
   - export PGP_SECRETKEY="keyfile:${TMP_KEY}"
   # See https://kohsuke.org/pgp-maven-plugin
+
   # Once there unit tests, wrap "package" with the following
   # org.jacoco:jacoco-maven-plugin:prepare-agent \
   # org.jacoco:jacoco-maven-plugin:report \
-  - |
-    ./mvnw clean \
-    -Prelease -s settings.xml \
-    package \
-    sonar:sonar \
-    deploy
+  - ./mvnw clean package sonar:sonar
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: bash ./mvnw -Prelease -s settings.xml deploy -DskipTests
+  on:
+    branch: master
 
 cache:
   directories:

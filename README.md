@@ -122,9 +122,9 @@ mv /tmp/lib/libapr* /tmp/lib/libtcnative* lib
 ./createCerts.sh
 
 # Start embedded tomcat
-LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar embedded-tomcat/target/tomcat-jar-with-dependencies.jar
+LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar examples/embedded-tomcat/target/tomcat-jar-with-dependencies.jar
 # or spring boot
-LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar spring-boot/target/spring-boot-*.jar
+LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar examples/spring-boot/target/spring-boot-*.jar
 # Standalone example is docker only
 ```
 

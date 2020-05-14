@@ -25,6 +25,7 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
     class WatchSslConfigThread extends Thread {
 
         private final Log log = LogFactory.getLog(WatchSslConfigThread.class);
+        private boolean initFailed = false;
 
         @Override
         public void run() {
@@ -54,6 +55,18 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
             try {
                 // Use the same logic for resolving the path as OpenSSLContext.addCertificate -> adjustRelativePath()
                 Path path = Paths.get(SSLHostConfig.adjustRelativePath(certificateFile)).getParent();
+                if (initFailed) {
+                    try {
+                        log.info("Found certificate after failed start. Restarting HTTP protocol");
+                        ReloadingHttp11AprProtocol.this.stop();
+                        init();
+                        ReloadingHttp11AprProtocol.this.start();
+                        initFailed = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 log.info("Watching certificate folder for change: " + path);
                 watchService = FileSystems.getDefault().newWatchService();
 
@@ -66,7 +79,19 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
                 watchAndReload(watchService);
             } catch (IOException e) {
                 log.error("Error while setting up watch for folder of certificate file: " + certificateFile, e);
-                throw new WatchSslConfigException(e);
+                // If there are not certs, the endpoint will have crashed on init().
+                // That is, socket is bound but SSL Context initialization failed.
+                // So there seems to be no use of implementing a retry here
+                // Just calling init 
+                initFailed = true;
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                    run();
+                //throw new WatchSslConfigException(e);
             }
         }
 

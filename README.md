@@ -30,7 +30,7 @@ If you need the `jar` you could also download it manually, from here:
 
 [![Maven Central](https://img.shields.io/maven-central/v/info.schnatterer.tomcat-reloading-connector/reloading-connector.svg)](https://search.maven.org/search?q=a:reloading-connector%20AND%20g:info.schnatterer.tomcat-reloading-connector)
 
-You can also get snapshot versions from our [snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/info/schnatterer/moby-names-generator/) 
+You can also get snapshot versions from our [snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/info/schnatterer/tomcat-reloading-connector/) 
 (for the most recent commit).
 To do so, add the following repo to your `pom.xml` or `settings.xml`:
 

@@ -21,6 +21,7 @@
 
     <modules>
         <module>reloading-connector</module>
+        <module>reloading-connector-spring-boot</module>
         <module>examples</module>
     </modules>
 

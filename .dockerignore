@@ -3,6 +3,8 @@
 # Whitelist
 !reloading-connector
 reloading-connector/target
+!reloading-connector-spring-boot
+reloading-connector-spring-boot/target
 !examples
 examples/embedded-tomcat/target
 examples/spring-boot/target

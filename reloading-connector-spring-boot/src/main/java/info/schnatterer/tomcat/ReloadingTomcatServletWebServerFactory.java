@@ -1,5 +1,6 @@
 package info.schnatterer.tomcat;
 
+import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11AprProtocol;
 import org.apache.coyote.http2.Http2Protocol;
 import org.apache.tomcat.util.net.SSLHostConfig;
@@ -21,13 +22,17 @@ public class ReloadingTomcatServletWebServerFactory extends TomcatServletWebServ
     private String certificateKeyFile;
     @Value("${server.ssl.certificateChainFile}")
     private String certificateChainFile;
+    @Value("${server.http.port:0}")
+    private int httpPort;
+    @Value("${server.port}")
+    private int serverPort;
 
     @Override
     public Ssl getSsl() {
         // Disable JSSE Protocol for SSL
         return null;
     }
-    
+
     public ReloadingTomcatServletWebServerFactory() {
         setProtocol("info.schnatterer.tomcat.ReloadingHttp11AprProtocol");
         addConnectorCustomizers(setupReloadingConnector());
@@ -52,6 +57,19 @@ public class ReloadingTomcatServletWebServerFactory extends TomcatServletWebServ
             connector.addSslHostConfig(sslHostConfig);
 
             connector.addUpgradeProtocol(new Http2Protocol());
+
+            if (httpPort > 0) {
+                addAdditionalTomcatConnectors(createHttpConnector(httpPort));
+            }
         };
+    }
+
+    private Connector createHttpConnector(int httpPort) {
+        Connector httpConnector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+        httpConnector.setScheme("http");
+        httpConnector.setPort(httpPort);
+        httpConnector.setSecure(false);
+        httpConnector.setRedirectPort(serverPort);
+        return httpConnector;
     }
 }

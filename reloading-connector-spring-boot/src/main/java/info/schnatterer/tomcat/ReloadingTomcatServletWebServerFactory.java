@@ -13,6 +13,19 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
 
+/**
+ * Configures spring-boot's embedded tomcat to use HTTPs and to be able to reload its SSL Context when the certificate 
+ * file changes.
+ * 
+ * Reads spring properties:
+ * <ul>
+ *     <li><code>server.ssl.certificateFile</code></li>
+ *     <li><code>server.ssl.certificateKeyFile</code></li>
+ *     <li><code>server.ssl.certificateChainFile</code></li>
+ * </ul>
+ * 
+ * Optionally an additional HTTP connector can be added by setting the <code>server.http.port</code> property.
+ */
 @Configuration
 public class ReloadingTomcatServletWebServerFactory extends TomcatServletWebServerFactory {
 

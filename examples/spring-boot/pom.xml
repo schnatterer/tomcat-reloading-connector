@@ -11,7 +11,6 @@
 
     <artifactId>spring-boot</artifactId>
     <name>spring-boot</name>
-    <description>Demo project for Spring Boot</description>
 
     <dependencyManagement>
         <dependencies>

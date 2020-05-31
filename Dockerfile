@@ -15,6 +15,7 @@ COPY mvnw /app/
 COPY pom.xml /app/
 COPY reloading-connector/pom.xml  /app/reloading-connector/ 
 COPY reloading-connector-spring-boot/pom.xml /app/reloading-connector-spring-boot/ 
+COPY reloading-connector-embedded-tomcat/pom.xml /app/reloading-connector-embedded-tomcat/
 COPY examples/pom.xml /app/examples/
 COPY examples/spring-boot/pom.xml  /app/examples/spring-boot/ 
 COPY examples/embedded-tomcat/pom.xml /app/examples/embedded-tomcat/
@@ -24,6 +25,7 @@ RUN ./mvnw dependency:go-offline
 FROM mavencache as mavenbuild
 COPY reloading-connector /app/reloading-connector
 COPY reloading-connector-spring-boot  /app/reloading-connector-spring-boot
+COPY reloading-connector-embedded-tomcat  /app/reloading-connector-embedded-tomcat
 COPY examples /app/examples
 RUN ./mvnw package
 

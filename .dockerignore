@@ -2,12 +2,10 @@
 *
 # Whitelist
 !reloading-connector
-reloading-connector/target
 !reloading-connector-spring-boot
-reloading-connector-spring-boot/target
+!reloading-connector-embedded-tomcat
 !examples
-examples/embedded-tomcat/target
-examples/spring-boot/target
+**/target
 !.mvn
 !mvnw
 !pom.xml

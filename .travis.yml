@@ -43,7 +43,7 @@ deploy:
   provider: script
   script: bash ./mvnw -Prelease -s settings.xml deploy -DskipTests
   on:
-    branch: master
+    all_branches: true
 
 cache:
   directories:

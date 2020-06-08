@@ -5,7 +5,7 @@
     <parent>
         <artifactId>examples</artifactId>
         <groupId>info.schnatterer.tomcat-reloading-connector</groupId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

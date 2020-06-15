@@ -14,6 +14,16 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
 
     private final Object lock = new Object();
     private volatile boolean configChanged = false;
+    /** 
+     * Delaying reload to make sure all cert files are written.
+     * Smaller amount of time increases reloading time.
+     * Higher amount of time increases chance that all cert-related files (cert and chain) have been written, so a 
+     * consistent state is reloaded.
+     * E.g. for letsencrypt the time between the creation of CSR and full chain usually is between 10-20s.
+     */
+    private static final int DELAY_RELOAD_MILLIS =
+            System.getenv("TOMCAT_DELAY_RELOAD_CERTIFICATES_MILLIS") != null ?
+            Integer.parseInt(System.getenv("TOMCAT_DELAY_RELOAD_CERTIFICATES_MILLIS")) : 3000;
 
     @Override
     public void init() throws Exception {
@@ -111,9 +121,14 @@ public class ReloadingHttp11AprProtocol extends Http11AprProtocol {
                 }
 
                 log.debug("Received notification of changed certificate. Delaying reload to make sure all cert files are written.");
-                Thread.sleep(3000);
+                Thread.sleep(DELAY_RELOAD_MILLIS);
 
                 getEndpoint().reloadSslHostConfigs();
+                
+                // Note: In theory, if files (e.g. certs/chain) are written after this call and before the next 
+                // wait() above, reload might not occur.
+                // To fully fix this, we would have to use a completely different implementation.
+                // A workaround is to increase the DELAY_RELOAD_MILLIS setting.
                 log.info("Reloaded SSL Config");
                 configChanged = false;
             } catch (Exception e) {

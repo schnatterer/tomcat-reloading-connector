@@ -63,6 +63,12 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
 
 * See also [example](examples/standalone-tomcat). 
 
+Note that the certificates are not reloaded instantly but there is a short delay (default: 3s) to make sure all files
+related to the certificated (cert, key, chain) have been written and no inconsistent state is loaded by tomcat.  
+If you need to customize this, you can set the delay in milliseconds via the environment variable 
+`TOMCAT_DELAY_RELOAD_CERTIFICATES_MILLIS`.  
+For example for letsencrypt the time between the creation of CSR and full chain usually is between 10-20s.
+
 ## Usage with Spring Boot
 
 * Add the dependency to your embedded tomcat project.

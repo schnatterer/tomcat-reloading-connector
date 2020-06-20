@@ -137,7 +137,7 @@ LD_LIBRARY_PATH="$(pwd)/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" java -jar exa
 ## Releasing
 
 ```bash
-./mvnw release:prepare
+./mvnw release:prepare -DreleaseVersion=0.3.0 -DdevelopmentVersion=0.3.1-SNAPSHOT
 ```
 
 Sets versions in `pom.xml`, commits, tags and pushes to SCM. Travis builds tag and pushes to Maven Central. 

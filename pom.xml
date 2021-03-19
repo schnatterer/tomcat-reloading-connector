@@ -12,7 +12,7 @@
     <description>Tomcat connector that automatically reloads SSLConfig</description>
 
     <properties>
-        <tomcat.version>9.0.35</tomcat.version>
+        <tomcat.version>10.0.4</tomcat.version>
         
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

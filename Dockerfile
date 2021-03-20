@@ -4,7 +4,7 @@ ARG FLAVOR=spring-boot
 ARG JAVA_VERSION=8u252-b09-debian
 FROM adoptopenjdk/openjdk8:jdk${JAVA_VERSION}-slim as jdk
 FROM adoptopenjdk/openjdk8:jre${JAVA_VERSION} as jre
-FROM bitnami/tomcat:9.0.35-debian-10-r1 as tomcat
+FROM bitnami/tomcat:9.0.44-debian-10-r8 as tomcat
 
 
 FROM jdk as mavencache

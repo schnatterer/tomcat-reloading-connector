@@ -14,6 +14,12 @@ the folder that contains the first configured certificate for changes and reload
 `Http11AprProtocol` means this will only work with 
 [Apache Portable Runtime (APR) based Native library for Tomcat](https://tomcat.apache.org/tomcat-9.0-doc/apr.html).
 
+## Examples
+
+* This repo contains a couple of [examples](examples) (Tomcat, Spring Boot and embedded Tomcat, described bellow). 
+* If you are looking for a more integrated solution try [letsencrypt-tomcat](https://github.com/schnatterer/letsencrypt-tomcat), which combines tomcat-reloading-connector with the ACME implementation dehydrated for a fully automated certificate renewal using Tomcat and Let's Encrypt. 
+* If you're planning to use certbot, [this info](https://github.com/schnatterer/tomcat-reloading-connector/issues/3#issuecomment-1003668898) in [#3](https://github.com/schnatterer/tomcat-reloading-connector/issues/3) by user [cyberphone](https://github.com/cyberphone) might help you getting started.
+
 ## Dependency
 
 ```XML
@@ -43,7 +49,7 @@ To do so, add the following repo to your `pom.xml` or `settings.xml`:
 </repository>
 ```
 
-## Use with Tomcat
+## Usage with Tomcat
 
 * Drop the reloading-connector.jar into your tomcat's library folder.
 * Configure the `ReloadingHttp11AprProtocol` in your `server.xml`.

@@ -6,6 +6,12 @@ tomcat-reloading-connector
 
 Tomcat connector that automatically reloads SSLConfig.
 
+⚠️ Note that there now is a built-in [`TLSCertificateReloadListener`](https://tomcat.apache.org/tomcat-9.0-doc/api/org/apache/catalina/security/TLSCertificateReloadListener.html) that monitors the expiration dates of TLS certificates and trigger automatic reloading of the TLS configuration a set number of days before the TLS certificate expires.
+Not exactly the same functionality as provided by `tomcat-reloading-connector` but should also solve the problem and is officially built into tomcat.
+
+See also [Bug 65770](https://bz.apache.org/bugzilla/show_bug.cgi?id=65770).
+
+
 # How to use?
 
 Right now, tomcat-reloading-connector offers a specialized `org.apache.coyote.http11.Http11AprProtocol` that watches
